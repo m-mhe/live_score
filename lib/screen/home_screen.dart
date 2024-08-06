@@ -11,38 +11,67 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   List<Football> matchList = [];
-
-  Future<void> _getMatchData() async {
-    final QuerySnapshot results = await firebaseFirestore.collection(
-        'match_score').get();
-    for (QueryDocumentSnapshot match in results.docs) {
-      matchList.insert(0,Football(teamOne: match.id.split('vs')[0],
-          teamTwo: match.id.split('vs')[1],
-          oneScore: match.get('team_one'),
-          twoScore: match.get('team_two')));
-    }
-    setState(() {});
-  }
 
   @override
   void initState() {
     super.initState();
-    _getMatchData();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Live Score', style: Theme.of(context).textTheme.titleLarge,),
+        leading: const Icon(Icons.gamepad),
+        title: Text(
+          'Live Score',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: ListView.builder(
-            itemCount: matchList.length,
-            itemBuilder: (context, i) {
-              return ScoreCard(match: matchList[i],);
+        child: StreamBuilder(
+            stream: firebaseFirestore.collection('match_score').snapshots(),
+            builder: (context,
+                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(snapshot.error.toString()),
+                );
+              }
+              if (snapshot.hasData == false) {
+                return const Center(
+                  child: Text('No matches'),
+                );
+              }
+              matchList.clear();
+              for (QueryDocumentSnapshot doc in snapshot.data?.docs ?? []) {
+                final String teamOne = doc.id.split('vs')[0];
+                final String teamTwo = doc.id.split('vs')[1];
+                matchList.insert(
+                  0,
+                  Football(
+                    teamOne: teamOne,
+                    teamTwo: teamTwo,
+                    oneScore: doc.get('team_one'),
+                    twoScore: doc.get('team_two'),
+                  ),
+                );
+              }
+              return ListView.builder(
+                  itemCount: matchList.length,
+                  itemBuilder: (context, i) {
+                    return ScoreCard(
+                      match: matchList[i],
+                    );
+                  });
             }),
       ),
     );
