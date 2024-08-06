@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
       title: 'Live Score',
       home: const HomeScreen(),
       theme: ThemeData(
-          textTheme: const TextTheme(
+          textTheme: TextTheme(
               titleLarge: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w700),
