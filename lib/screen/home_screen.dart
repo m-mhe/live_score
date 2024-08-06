@@ -11,7 +11,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   List<Football> matchList = [];
 
@@ -55,8 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
               for (QueryDocumentSnapshot doc in snapshot.data?.docs ?? []) {
                 final String teamOne = doc.id.split('vs')[0];
                 final String teamTwo = doc.id.split('vs')[1];
-                matchList.insert(
-                  0,
+                matchList.add(
                   Football(
                     teamOne: teamOne,
                     teamTwo: teamTwo,
