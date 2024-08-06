@@ -14,9 +14,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   List<Football> matchList = [];
 
+  //Future operation:
   Future<void> _getMatchData() async {
     final QuerySnapshot results = await firebaseFirestore.collection(
-        'match_score').get();
+        'match_score').get();//fetching data from firebaseFirestore
     for (QueryDocumentSnapshot match in results.docs) {
       matchList.insert(0,Football(teamOne: match.id.split('vs')[0],
           teamTwo: match.id.split('vs')[1],
