@@ -1,11 +1,15 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
-class FirBasePushNotificationSetup{
+class FirBasePushNotificationSetup {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
   FirBasePushNotificationSetup._();
-  static final FirBasePushNotificationSetup instance = FirBasePushNotificationSetup._();
-  Future<void> initialize() async{
+
+  static final FirBasePushNotificationSetup instance =
+      FirBasePushNotificationSetup._();
+
+  Future<void> initialize() async {
     await _firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
@@ -17,7 +21,7 @@ class FirBasePushNotificationSetup{
     );
 
     //Foreground
-    FirebaseMessaging.onMessage.listen((RemoteMessage message){
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (kDebugMode) {
         print(message.notification?.title);
       }
@@ -30,7 +34,7 @@ class FirBasePushNotificationSetup{
     });
 
     //Background
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message){
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       debugPrint(message.notification?.title);
       debugPrint(message.notification?.body);
       debugPrint(message.data.toString());
@@ -43,17 +47,16 @@ class FirBasePushNotificationSetup{
     await _onTokenRefresh();
   }
 
-  Future<void> _getToken() async{
+  Future<void> _getToken() async {
     String? token = await _firebaseMessaging.getToken();
     print("Token :  $token");
   }
-  Future<void> _onTokenRefresh() async{
-    _firebaseMessaging.onTokenRefresh.listen((String token){
+
+  Future<void> _onTokenRefresh() async {
+    _firebaseMessaging.onTokenRefresh.listen((String token) {
       print("Token :  $token");
     });
   }
 }
 
-Future<void> justDemo(RemoteMessage message) async{
-
-}
+Future<void> justDemo(RemoteMessage message) async {}
