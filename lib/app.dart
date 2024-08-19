@@ -11,13 +11,15 @@ class MyApp extends StatelessWidget {
       home: const HomeScreen(),
       theme: ThemeData(
           textTheme: const TextTheme(
-              titleLarge: TextStyle(
+              titleLarge:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+              headlineLarge: TextStyle(
                   color: Colors.black,
-                  fontWeight: FontWeight.w700),
-            headlineLarge: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)
-          ),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600)),
           appBarTheme: AppBarTheme(
-              backgroundColor: Colors.yellow[800],)),
+            backgroundColor: Colors.yellow[800],
+          )),
     );
   }
 }
